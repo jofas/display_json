@@ -1,0 +1,18 @@
+[package]
+name = "display_json"
+version = "0.1.0"
+authors = ["jofas <jonas@fc-web.de>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = { version = "*", features = ["derive", "printing", "extra-traits"] }
+quote = "*"
+proc-macro2 = "*"
+serde = "*"
+serde_derive = "*"
+serde_json = "*"
