@@ -12,3 +12,5 @@ TODO
 * pipeline
 
 * codecov
+
+* publish
