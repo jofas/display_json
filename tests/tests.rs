@@ -1,4 +1,6 @@
-use display_json::{DisplayAsJson, DisplayAsJsonPretty, DebugAsJson, DebugAsJsonPretty};
+use display_json::{
+  DebugAsJson, DebugAsJsonPretty, DisplayAsJson, DisplayAsJsonPretty,
+};
 use serde_derive::Serialize;
 
 #[derive(Serialize, DisplayAsJson, DebugAsJsonPretty, Default)]
@@ -15,7 +17,8 @@ struct ExamplePretty {
   field3: Option<String>,
 }
 
-static JSON: &'static str = r#"{"field1":false,"field2":"","field3":null}"#;
+static JSON: &'static str =
+  r#"{"field1":false,"field2":"","field3":null}"#;
 static JSON_PRETTY: &'static str = r#"{
   "field1": false,
   "field2": "",
