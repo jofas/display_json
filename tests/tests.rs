@@ -1,7 +1,7 @@
 use display_json::{
   DebugAsJson, DebugAsJsonPretty, DisplayAsJson, DisplayAsJsonPretty,
 };
-use serde_derive::Serialize;
+use serde::Serialize;
 
 #[derive(Serialize, DisplayAsJson, DebugAsJsonPretty, Default)]
 struct Example {
