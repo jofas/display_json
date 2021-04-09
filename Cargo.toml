@@ -4,8 +4,8 @@ version = "0.1.0"
 authors = ["jofas <jonas@fc-web.de>"]
 edition = "2018"
 license-file = "LICENSE"
-description = "Procedural macros for implementing Display and Debug with serde_json::to_string and serde_json::to_string_pretty"
 readme = "README.rst"
+description = "Procedural macros for implementing Display and Debug with serde_json::to_string and serde_json::to_string_pretty"
 homepage = "https://github.com/jofas/display_json"
 repository = "https://github.com/jofas/display_json"
 documentation = "https://docs.rs/display_json"
@@ -16,6 +16,6 @@ documentation = "https://docs.rs/display_json"
 members = ["display_json_derive"]
 
 [dependencies]
-display_json_derive = { path = "display_json_derive" }
+display_json_derive = "0.1.0"
 serde = { version = "^1.0.125", features = ["derive"] }
 serde_json = "^1.0.64"
