@@ -3,8 +3,17 @@ name = "display_json"
 version = "0.1.0"
 authors = ["jofas <jonas@fc-web.de>"]
 edition = "2018"
+license-file = "LICENSE"
+description = "Procedural macros for implementing Display and Debug with serde_json::to_string and serde_json::to_string_pretty"
+readme = "README.rst"
+homepage = "https://github.com/jofas/display_json"
+repository = "https://github.com/jofas/display_json"
+documentation = "https://docs.rs/display_json"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[workspace]
+members = ["display_json_derive"]
 
 [dependencies]
 display_json_derive = { path = "display_json_derive" }
