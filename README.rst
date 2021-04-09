@@ -7,8 +7,6 @@ A rust library providing the procedural macros ``DisplayAsJson``,
 TODO
 ----
 
-* imports with proper versions
-
 * documentation
 
 * pipeline
