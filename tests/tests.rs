@@ -17,6 +17,19 @@ struct ExamplePretty {
   field3: Option<String>,
 }
 
+#[derive(Serialize, DisplayAsJson)]
+struct ExampleGenerics<T> {
+  field1: T
+}
+
+impl<T: Default> Default for ExampleGenerics<T> {
+  fn default() -> Self {
+    Self {
+      field1: T::default(),
+    }
+  }
+}
+
 static JSON: &'static str =
   r#"{"field1":false,"field2":"","field3":null}"#;
 static JSON_PRETTY: &'static str = r#"{
@@ -50,4 +63,13 @@ fn example_pretty() {
 fn example_pretty_debug() {
   let display = format!("{:?}", ExamplePretty::default());
   assert_eq!(display, JSON);
+}
+
+#[test]
+fn example_generic() {
+  let display = format!("{}", ExampleGenerics::<String>::default());
+  assert_eq!(display, r#"{"field1":""}"#);
+
+  let display = format!("{}", ExampleGenerics::<i64>::default());
+  assert_eq!(display, r#"{"field1":0}"#);
 }

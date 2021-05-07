@@ -2,12 +2,17 @@ extern crate proc_macro;
 use proc_macro::TokenStream;
 
 use quote::quote;
-use syn::{parse_macro_input, DeriveInput};
+use syn::punctuated::Punctuated;
+use syn::token::Comma;
+use syn::{
+  parse_macro_input, DeriveInput, GenericParam, TypeParamBound,
+  Generics,
+};
 
 macro_rules! derive_as_json {
-  ($tr:path, $name:ident, $function:path) => {
+  ($tr:path, $name:ident, $generics:ident, $params:ident, $function:path) => {
     quote! {
-      impl $tr for #$name {
+      impl<#$params> $tr for #$name #$generics {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
           let s = $function(&self)
             .map_err(|_| std::fmt::Error::default())?;
@@ -18,15 +23,43 @@ macro_rules! derive_as_json {
   };
 }
 
+fn serialize_in_generics(
+  g: &Generics,
+) -> Punctuated<GenericParam, Comma> {
+  let mut params = Punctuated::<GenericParam, Comma>::new();
+
+  for param in g.params.iter() {
+    let param = match param {
+      GenericParam::Type(typ) => {
+        let mut typ = typ.clone();
+        typ.bounds.push(TypeParamBound::Trait(
+          syn::parse_str("display_json::serde::Serialize").unwrap(),
+        ));
+        GenericParam::Type(typ.clone())
+      }
+      _ => param.clone(),
+    };
+    params.push(param);
+  }
+
+  params
+}
+
 #[proc_macro_derive(DisplayAsJson)]
 pub fn derive_display_as_json(input: TokenStream) -> TokenStream {
   let input = parse_macro_input!(input as DeriveInput);
   let name = &input.ident;
+  let generics = &input.generics;
+  let params = serialize_in_generics(generics);
+
   let result = derive_as_json!(
     std::fmt::Display,
     name,
+    generics,
+    params,
     display_json::serde_json::to_string
   );
+
   TokenStream::from(result)
 }
 
@@ -36,11 +69,17 @@ pub fn derive_display_as_json_pretty(
 ) -> TokenStream {
   let input = parse_macro_input!(input as DeriveInput);
   let name = &input.ident;
+  let generics = &input.generics;
+  let params = serialize_in_generics(generics);
+
   let result = derive_as_json!(
     std::fmt::Display,
     name,
+    generics,
+    params,
     display_json::serde_json::to_string_pretty
   );
+
   TokenStream::from(result)
 }
 
@@ -48,11 +87,17 @@ pub fn derive_display_as_json_pretty(
 pub fn derive_debug_as_json(input: TokenStream) -> TokenStream {
   let input = parse_macro_input!(input as DeriveInput);
   let name = &input.ident;
+  let generics = &input.generics;
+  let params = serialize_in_generics(generics);
+
   let result = derive_as_json!(
     std::fmt::Debug,
     name,
+    generics,
+    params,
     display_json::serde_json::to_string
   );
+
   TokenStream::from(result)
 }
 
@@ -62,10 +107,16 @@ pub fn derive_debug_as_json_pretty(
 ) -> TokenStream {
   let input = parse_macro_input!(input as DeriveInput);
   let name = &input.ident;
+  let generics = &input.generics;
+  let params = serialize_in_generics(generics);
+
   let result = derive_as_json!(
     std::fmt::Debug,
     name,
+    generics,
+    params,
     display_json::serde_json::to_string_pretty
   );
+
   TokenStream::from(result)
 }
