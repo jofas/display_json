@@ -7,17 +7,21 @@
 [![Docs](https://img.shields.io/badge/docs-latest-blue.svg)](https://docs.rs/display_json/latest/display_json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A rust crate providing the custom derive procedural macros 
+A rust crate for automatically deriving the rust standard library's
+`Debug` and `Display` traits for types that implement 
+[serde's](https://serde.rs) `Serialize` trait.
+The implementations of these traits serialize objects to stringified 
+json. 
+
+`display_json` provides the custom derive procedural macros 
 `DisplayAsJson`, `DisplayAsJsonPretty`, `DebugAsJson` and
 `DebugAsJsonPretty`.
-These custom derives can be used to automatically implement the 
-standard library's  `Debug` and `Display` traits for types
-that already implement [serde's](https://serde.rs) `Serialize` trait.
-The custom derives from the `display_json` crate create a `json` 
-string for an object using 
-[serde_json](https://github.com/serde-rs/json).
-The `serde_json::to_string` and `serde_json::to_string_pretty` 
-functions to be precise.
+These custom derives create a stringified json version of an object
+using [serde_json](https://github.com/serde-rs/json).
+The four custom derives are basically neat wrappers that wrap the 
+`serde_json::to_string` and `serde_json::to_string_pretty` 
+functions into an implementation of `Display` or `Debug`.
+
 
 ## Usage
 
