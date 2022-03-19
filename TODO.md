@@ -2,7 +2,7 @@
 
 * [x] build action
 
-* [ ] badges
+* [x] badges
 
 * [ ] top-level documentation
 
