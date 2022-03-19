@@ -18,3 +18,7 @@ string for an object using
 [serde_json](https://github.com/serde-rs/json).
 The `serde_json::to_string` and `serde_json::to_string_pretty` 
 functions to be precise.
+
+## Usage
+
+TODO: general example + output for each of the four macros
