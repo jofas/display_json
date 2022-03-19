@@ -6,6 +6,6 @@
 
 * [x] top-level documentation
 
-* [ ] exported artefacts documentation
+* [x] exported artefacts documentation
 
 * [ ] publish `v0.2.0`

@@ -47,6 +47,37 @@ fn serialize_in_generics(
   params
 }
 
+/// Implements [Display](std::fmt::Display) as a wrapper around
+/// [serde_json::to_string].
+///
+/// See this [crate's](crate) documentation for more examples on
+/// how you can use this custom derive procedural macro.
+///
+/// **Example:**
+///
+/// ```rust
+/// use serde::Serialize;
+/// use display_json::DisplayAsJson;
+///
+/// #[derive(Serialize, DisplayAsJson)]
+/// #[serde(tag = "type")]
+/// #[serde(content = "val")]
+/// #[serde(rename_all = "lowercase")]
+/// enum EitherStringOrNum {
+///   String(String),
+///   Num(f64),
+/// }
+///
+/// let num = EitherStringOrNum::Num(12.);
+/// assert_eq!(num.to_string(), r#"{"type":"num","val":12.0}"#);
+///
+/// let string = EitherStringOrNum::String("hello".to_owned());
+/// assert_eq!(
+///   string.to_string(),
+///   r#"{"type":"string","val":"hello"}"#,
+/// );
+/// ```
+///
 #[proc_macro_derive(DisplayAsJson)]
 pub fn derive_display_as_json(input: TokenStream) -> TokenStream {
   let input = parse_macro_input!(input as DeriveInput);
@@ -65,6 +96,44 @@ pub fn derive_display_as_json(input: TokenStream) -> TokenStream {
   TokenStream::from(result)
 }
 
+/// Implements [Display](std::fmt::Display) as a wrapper around
+/// [serde_json::to_string_pretty].
+///
+/// See this [crate's](crate) documentation for more examples on
+/// how you can use this custom derive procedural macro.
+///
+/// **Example:**
+///
+/// ```rust
+/// use serde::Serialize;
+/// use display_json::DisplayAsJsonPretty;
+///
+/// #[derive(Serialize, DisplayAsJsonPretty)]
+/// #[serde(tag = "type")]
+/// #[serde(content = "val")]
+/// #[serde(rename_all = "lowercase")]
+/// enum EitherStringOrNum {
+///   String(String),
+///   Num(f64),
+/// }
+///
+/// let res = r#"{
+///   "type": "num",
+///   "val": 12.0
+/// }"#;
+///
+/// let num = EitherStringOrNum::Num(12.);
+/// assert_eq!(num.to_string(), res);
+///
+/// let res = r#"{
+///   "type": "string",
+///   "val": "hello"
+/// }"#;
+///
+/// let string = EitherStringOrNum::String("hello".to_owned());
+/// assert_eq!(string.to_string(), res);
+/// ```
+///
 #[proc_macro_derive(DisplayAsJsonPretty)]
 pub fn derive_display_as_json_pretty(
   input: TokenStream,
@@ -85,6 +154,37 @@ pub fn derive_display_as_json_pretty(
   TokenStream::from(result)
 }
 
+/// Implements [Debug](std::fmt::Debug) as a wrapper around
+/// [serde_json::to_string].
+///
+/// See this [crate's](crate) documentation for more examples on
+/// how you can use this custom derive procedural macro.
+///
+/// **Example:**
+///
+/// ```rust
+/// use serde::Serialize;
+/// use display_json::DebugAsJson;
+///
+/// #[derive(Serialize, DebugAsJson)]
+/// #[serde(tag = "type")]
+/// #[serde(content = "val")]
+/// #[serde(rename_all = "lowercase")]
+/// enum EitherStringOrNum {
+///   String(String),
+///   Num(f64),
+/// }
+///
+/// let num = EitherStringOrNum::Num(12.);
+/// assert_eq!(format!("{:?}", num), r#"{"type":"num","val":12.0}"#);
+///
+/// let string = EitherStringOrNum::String("hello".to_owned());
+/// assert_eq!(
+///   format!("{:?}", string),
+///   r#"{"type":"string","val":"hello"}"#,
+/// );
+/// ```
+///
 #[proc_macro_derive(DebugAsJson)]
 pub fn derive_debug_as_json(input: TokenStream) -> TokenStream {
   let input = parse_macro_input!(input as DeriveInput);
@@ -103,6 +203,44 @@ pub fn derive_debug_as_json(input: TokenStream) -> TokenStream {
   TokenStream::from(result)
 }
 
+/// Implements [Debug](std::fmt::Debug) as a wrapper around
+/// [serde_json::to_string_pretty].
+///
+/// See this [crate's](crate) documentation for more examples on
+/// how you can use this custom derive procedural macro.
+///
+/// **Example:**
+///
+/// ```rust
+/// use serde::Serialize;
+/// use display_json::DebugAsJsonPretty;
+///
+/// #[derive(Serialize, DebugAsJsonPretty)]
+/// #[serde(tag = "type")]
+/// #[serde(content = "val")]
+/// #[serde(rename_all = "lowercase")]
+/// enum EitherStringOrNum {
+///   String(String),
+///   Num(f64),
+/// }
+///
+/// let res = r#"{
+///   "type": "num",
+///   "val": 12.0
+/// }"#;
+///
+/// let num = EitherStringOrNum::Num(12.);
+/// assert_eq!(format!("{:?}", num), res);
+///
+/// let res = r#"{
+///   "type": "string",
+///   "val": "hello"
+/// }"#;
+///
+/// let string = EitherStringOrNum::String("hello".to_owned());
+/// assert_eq!(format!("{:?}", string), res);
+/// ```
+///
 #[proc_macro_derive(DebugAsJsonPretty)]
 pub fn derive_debug_as_json_pretty(
   input: TokenStream,
