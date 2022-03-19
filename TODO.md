@@ -8,4 +8,4 @@
 
 * [x] exported artefacts documentation
 
-* [ ] publish `v0.2.0`
+* [x] publish `v0.2.0`
