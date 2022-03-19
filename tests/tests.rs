@@ -19,7 +19,7 @@ struct ExamplePretty {
 
 #[derive(Serialize, DisplayAsJson)]
 struct ExampleGenerics<T> {
-  field1: T
+  field1: T,
 }
 
 impl<T: Default> Default for ExampleGenerics<T> {
