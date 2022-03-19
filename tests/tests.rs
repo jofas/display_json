@@ -30,9 +30,9 @@ impl<T: Default> Default for ExampleGenerics<T> {
   }
 }
 
-static JSON: &'static str =
+static JSON: &str =
   r#"{"field1":false,"field2":"","field3":null}"#;
-static JSON_PRETTY: &'static str = r#"{
+static JSON_PRETTY: &str = r#"{
   "field1": false,
   "field2": "",
   "field3": null
