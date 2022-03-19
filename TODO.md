@@ -4,7 +4,7 @@
 
 * [x] badges
 
-* [ ] top-level documentation
+* [x] top-level documentation
 
 * [ ] exported artefacts documentation
 
