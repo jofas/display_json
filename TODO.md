@@ -1,6 +1,6 @@
 # TODO
 
-* [ ] build action
+* [x] build action
 
 * [ ] badges
 
