@@ -22,8 +22,10 @@ The four custom derives are basically neat wrappers that wrap the
 `serde_json::to_string` and `serde_json::to_string_pretty` 
 functions into an implementation of `Display` or `Debug`.
 
+TODO: incorporate deserializing with FromStr
 
-## Usage
+
+## Serializing objects to json with rust std's fmt traits
 
 `display_json` provides you with an easy way of combining the 
 serialization of your objects to json and the usage of rust's 
@@ -174,3 +176,8 @@ As you can see in the example above, you can combine the
 For example, you could use `DisplayAsJson` to serialize your object
 for the body of an http request and `DebugAsJsonPretty` for creating
 well-readable debugging messages for you to debug your code.
+
+
+## Deserializing objects from json with rust std's FromStr trait
+
+TODO: write doc + example
