@@ -7,22 +7,20 @@
 [![Docs](https://img.shields.io/badge/docs-latest-blue.svg)](https://docs.rs/display_json/latest/display_json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A rust crate for automatically deriving the rust standard library's
-`Debug` and `Display` traits for types that implement 
-[serde's](https://serde.rs) `Serialize` trait.
-The implementations of these traits serialize objects to stringified 
-json. 
-
-`display_json` provides the custom derive procedural macros 
-`DisplayAsJson`, `DisplayAsJsonPretty`, `DebugAsJson` and
-`DebugAsJsonPretty`.
-These custom derives create a stringified json version of an object
-using [serde_json](https://github.com/serde-rs/json).
-The four custom derives are basically neat wrappers that wrap the 
-`serde_json::to_string` and `serde_json::to_string_pretty` 
-functions into an implementation of `Display` or `Debug`.
-
-TODO: incorporate deserializing with FromStr
+[Rust's standard library](https://doc.rust-lang.org/std) offers
+traits your types can implement in order to serialize 
+(`std::fmt::{Display, Debug}`) or deserialize (`std::str::FromStr`)
+them to and from strings.
+Serialization and deserialization of data types in rust is usually 
+done by implementing the `Serialize` and `Deserialize` traits from 
+the [serde](https://serde.rs) crate.
+`display_json` is a crate that allows you to easily integrate 
+`serde`'s functionality with these traits from `std` with procedural 
+macros.
+These macros (de)serialize your types to and from 
+[json strings](https://www.rfc-editor.org/rfc/rfc8259) by wrapping
+[serde_json's](https://docs.serde.rs/serde_json/) serialization and
+deserialization capabilities into the traits from `std`.
 
 
 ## Serializing objects to json with rust std's fmt traits
@@ -31,6 +29,16 @@ TODO: incorporate deserializing with FromStr
 serialization of your objects to json and the usage of rust's 
 built-in formatting features provided by the `Display` and `Debug` 
 traits.
+For string serialization to json, `display_json` exposes the custom 
+derive procedural macros `DisplayAsJson`, `DisplayAsJsonPretty`, 
+`DebugAsJson` and `DebugAsJsonPretty`.
+This allows you to use `std`'s
+These custom derives create a stringified json version of an object
+using [serde_json](https://github.com/serde-rs/json).
+The four custom derive macros are basically neat wrappers that wrap 
+the `to_string` and `to_string_pretty` functions from the 
+[serde_json](https://github.com/serde-rs/json) crate into an
+implementation of `Display` or `Debug` for your type.
 
 
 ### DisplayAsJson
