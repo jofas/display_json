@@ -1,7 +1,11 @@
 use display_json::{
   DebugAsJson, DebugAsJsonPretty, DisplayAsJson, DisplayAsJsonPretty,
+  FromStrAsJson,
 };
-use serde::Serialize;
+
+use serde::{Deserialize, Serialize};
+
+use std::str::FromStr;
 
 #[derive(Serialize, DisplayAsJson, DebugAsJsonPretty, Default)]
 struct Example {
@@ -17,7 +21,23 @@ struct ExamplePretty {
   field3: Option<String>,
 }
 
-#[derive(Serialize, DisplayAsJson)]
+#[derive(
+  Serialize,
+  Deserialize,
+  FromStrAsJson,
+  DebugAsJson,
+  PartialEq,
+  Default,
+)]
+struct ExampleFromStr {
+  field1: bool,
+  field2: String,
+  field3: Option<String>,
+}
+
+#[derive(
+  Serialize, Deserialize, DebugAsJson, FromStrAsJson, PartialEq,
+)]
 struct ExampleGenerics<T> {
   field1: T,
 }
@@ -65,10 +85,32 @@ fn example_pretty_debug() {
 }
 
 #[test]
-fn example_generic() {
-  let display = format!("{}", ExampleGenerics::<String>::default());
-  assert_eq!(display, r#"{"field1":""}"#);
+fn example_from_str() {
+  assert_eq!(
+    ExampleFromStr::from_str(JSON).unwrap(),
+    ExampleFromStr::default()
+  );
+  assert_eq!(
+    ExampleFromStr::from_str(JSON_PRETTY).unwrap(),
+    ExampleFromStr::default()
+  );
+}
 
-  let display = format!("{}", ExampleGenerics::<i64>::default());
-  assert_eq!(display, r#"{"field1":0}"#);
+#[test]
+fn example_generic_debug() {
+  let debug = format!("{:?}", ExampleGenerics::<String>::default());
+  assert_eq!(debug, r#"{"field1":""}"#);
+
+  let debug = format!("{:?}", ExampleGenerics::<i64>::default());
+  assert_eq!(debug, r#"{"field1":0}"#);
+}
+
+#[test]
+fn example_generic_from_str() {
+  let json = r#"{"field1":""}"#;
+
+  assert_eq!(
+    ExampleGenerics::<String>::from_str(json).unwrap(),
+    ExampleGenerics::<String>::default(),
+  );
 }
