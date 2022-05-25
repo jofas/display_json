@@ -15,8 +15,8 @@ Serialization and deserialization of data types in rust is usually
 done by implementing the `Serialize` and `Deserialize` traits from 
 the [serde](https://serde.rs) crate.
 `display_json` is a crate that allows you to easily integrate 
-`serde`'s functionality with these traits from `std` with procedural 
-macros.
+`serde`'s functionality with these traits from `std` using custom
+derive procedural macros.
 These macros (de)serialize your types to and from 
 [json strings](https://www.rfc-editor.org/rfc/rfc8259) by wrapping
 [serde_json's](https://docs.serde.rs/serde_json/) serialization and
