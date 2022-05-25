@@ -188,4 +188,55 @@ well-readable debugging messages for you to debug your code.
 
 ## Deserializing objects from json with rust std's FromStr trait
 
-TODO: write doc + example
+While deserialization of json strings is usually done by integrating 
+your program directly with the [serde](https://serde.rs) and 
+[serde_json](https://docs.serde.rs/serde_json/) crates, sometimes you 
+want to or have to use rust's standard library's trait
+`std::str::FromStr`, which is how the types in `std` implement 
+deserialization from string.
+This could be due to interoperability constraints with other crate's
+that perform deserialization from strings, without `serde` 
+integration.
+An example of such a crate would be 
+[clap's derive api](https://docs.rs/clap/3/clap/index.html).
+
+If you find yourself confronted with the fact that your type needs
+to implement `std::str::FromStr`, even though it implements
+`serde::Deserialize` and you have no intention of thinking up a
+custom format with a parser just to cumbersomely write an 
+implementation for `FromStr` by hand, `display_json` is a great 
+choice. 
+
+### FromStrAsJson
+
+`display_json` exposes the `FromStrAsJson` custom derive procedural 
+macro you can derive on your type.
+`FromStrAsJson` implements `std::str::FromStr` as a wrapper around
+`serde_json::from_str`.
+If you need to implement the `FromStr` trait for your type and all
+you want to do is to deserialize a json string with it, 
+`FromStrAsJson` is the solution for you with the least amount of
+code, making sure your focus lies on what your program does, without
+you having to stare at boilerplate code.
+
+`FromStrAsJson` is used as follows:
+
+```rust
+use serde::Deserialize;
+use display_json::FromStrAsJson;
+
+use std::str::FromStr;
+
+#[derive(Deserialize, FromStrAsJson, PartialEq, Debug)]
+struct Foo {
+  bar: String,
+  baz: i32,
+  bat: bool,
+}
+
+let f_as_json = r#"{"bar":"bar","baz":0,"bat":true}"#;
+
+let f = Foo { bar: "bar".to_owned(), baz: 0, bat: true };
+
+assert_eq!(Foo::from_str(f_as_json).unwrap(), f);
+```

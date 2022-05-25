@@ -15,7 +15,7 @@
 
 * [x] tests
 
-* [ ] documentation
+* [x] documentation
 
 * [ ] `toc`
 
