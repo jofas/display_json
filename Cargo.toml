@@ -1,12 +1,12 @@
 [package]
 name = "display_json"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["jofas <jonas@fc-web.de>"]
 edition = "2018"
 license = "MIT"
 readme = "README.md"
-description = "Procedural macros for implementing Display and Debug to return a json string"
-keywords = ["Display", "Debug", "json", "serde", "proc_macro"]
+description = "Procedural macros for implementing Display, Debug and FromStr for (de)serializing json strings"
+keywords = ["Display", "Debug", "FromStr", "json", "serde", "proc_macro"]
 homepage = "https://github.com/jofas/display_json"
 repository = "https://github.com/jofas/display_json"
 documentation = "https://docs.rs/display_json"
