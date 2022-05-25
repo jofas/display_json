@@ -25,7 +25,8 @@ deserialization capabilities into the traits from `std`.
 
 ## Table of Contents
 
-<!--ts--><!--te-->
+<!--ts-->
+<!--te-->
 
 
 ## Serializing objects to json with rust std's fmt traits
