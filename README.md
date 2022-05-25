@@ -23,6 +23,11 @@ These macros (de)serialize your types to and from
 deserialization capabilities into the traits from `std`.
 
 
+## Table of Contents
+
+<!--ts--><!--te-->
+
+
 ## Serializing objects to json with rust std's fmt traits
 
 `display_json` provides you with an easy way of combining the 
