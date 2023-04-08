@@ -69,8 +69,8 @@ fn deserialize_in_generics(
   params
 }
 
-/// Implements [Display](std::fmt::Display) as a wrapper around
-/// [serde_json::to_string].
+/// Implements [`Display`](std::fmt::Display) as a wrapper around
+/// [`serde_json::to_string`].
 ///
 /// See this [crate's](crate) documentation for more examples on
 /// how you can use this custom derive procedural macro.
@@ -118,8 +118,8 @@ pub fn derive_display_as_json(input: TokenStream) -> TokenStream {
   TokenStream::from(result)
 }
 
-/// Implements [Display](std::fmt::Display) as a wrapper around
-/// [serde_json::to_string_pretty].
+/// Implements [`Display`](std::fmt::Display) as a wrapper around
+/// [`serde_json::to_string_pretty`].
 ///
 /// See this [crate's](crate) documentation for more examples on
 /// how you can use this custom derive procedural macro.
@@ -176,8 +176,8 @@ pub fn derive_display_as_json_pretty(
   TokenStream::from(result)
 }
 
-/// Implements [Debug](std::fmt::Debug) as a wrapper around
-/// [serde_json::to_string].
+/// Implements [`Debug`](std::fmt::Debug) as a wrapper around
+/// [`serde_json::to_string`].
 ///
 /// See this [crate's](crate) documentation for more examples on
 /// how you can use this custom derive procedural macro.
@@ -225,8 +225,8 @@ pub fn derive_debug_as_json(input: TokenStream) -> TokenStream {
   TokenStream::from(result)
 }
 
-/// Implements [Debug](std::fmt::Debug) as a wrapper around
-/// [serde_json::to_string_pretty].
+/// Implements [`Debug`](std::fmt::Debug) as a wrapper around
+/// [`serde_json::to_string_pretty`].
 ///
 /// See this [crate's](crate) documentation for more examples on
 /// how you can use this custom derive procedural macro.
@@ -283,8 +283,8 @@ pub fn derive_debug_as_json_pretty(
   TokenStream::from(result)
 }
 
-/// Implements [FromStr](std::str::FromStr) as a wrapper around
-/// [serde_json::from_str].
+/// Implements [`FromStr`](std::str::FromStr) as a wrapper around
+/// [`serde_json::from_str`].
 ///
 /// See this [crate's](crate) documentation for more examples on
 /// how you can use this custom derive procedural macro.
