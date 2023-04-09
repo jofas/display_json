@@ -6,67 +6,60 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::punctuated::Punctuated;
 use syn::token::Comma;
-use syn::{
-  parse_macro_input, DeriveInput, GenericParam, Generics,
-  TypeParamBound,
-};
+use syn::{parse_macro_input, DeriveInput, GenericParam, Generics, TypeParamBound};
 
 macro_rules! derive_fmt_as_json {
-  ($tr:path, $name:ident, $generics:ident, $params:ident, $function:path) => {
-    quote! {
-      impl<#$params> $tr for #$name #$generics {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-          let s = $function(&self)
-            .map_err(|_| std::fmt::Error::default())?;
-          write!(f, "{}", s)
+    ($tr:path, $name:ident, $generics:ident, $params:ident, $function:path) => {
+        quote! {
+            impl<#$params> $tr for #$name #$generics {
+                fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                    let s = $function(&self)
+                        .map_err(|_| std::fmt::Error::default())?;
+                    write!(f, "{}", s)
+                }
+            }
         }
-      }
+    };
+}
+
+fn serialize_in_generics(g: &Generics) -> Punctuated<GenericParam, Comma> {
+    let mut params = Punctuated::<GenericParam, Comma>::new();
+
+    for param in g.params.iter() {
+        let param = match param {
+            GenericParam::Type(typ) => {
+                let mut typ = typ.clone();
+                typ.bounds.push(TypeParamBound::Trait(
+                    syn::parse_str("serde::Serialize").unwrap(),
+                ));
+                GenericParam::Type(typ.clone())
+            }
+            _ => param.clone(),
+        };
+        params.push(param);
     }
-  };
+
+    params
 }
 
-fn serialize_in_generics(
-  g: &Generics,
-) -> Punctuated<GenericParam, Comma> {
-  let mut params = Punctuated::<GenericParam, Comma>::new();
+fn deserialize_in_generics(g: &Generics) -> Punctuated<GenericParam, Comma> {
+    let mut params = Punctuated::<GenericParam, Comma>::new();
 
-  for param in g.params.iter() {
-    let param = match param {
-      GenericParam::Type(typ) => {
-        let mut typ = typ.clone();
-        typ.bounds.push(TypeParamBound::Trait(
-          syn::parse_str("serde::Serialize").unwrap(),
-        ));
-        GenericParam::Type(typ.clone())
-      }
-      _ => param.clone(),
-    };
-    params.push(param);
-  }
+    for param in g.params.iter() {
+        let param = match param {
+            GenericParam::Type(typ) => {
+                let mut typ = typ.clone();
+                typ.bounds.push(TypeParamBound::Trait(
+                    syn::parse_str("serde::de::DeserializeOwned").unwrap(),
+                ));
+                GenericParam::Type(typ.clone())
+            }
+            _ => param.clone(),
+        };
+        params.push(param);
+    }
 
-  params
-}
-
-fn deserialize_in_generics(
-  g: &Generics,
-) -> Punctuated<GenericParam, Comma> {
-  let mut params = Punctuated::<GenericParam, Comma>::new();
-
-  for param in g.params.iter() {
-    let param = match param {
-      GenericParam::Type(typ) => {
-        let mut typ = typ.clone();
-        typ.bounds.push(TypeParamBound::Trait(
-          syn::parse_str("serde::de::DeserializeOwned").unwrap(),
-        ));
-        GenericParam::Type(typ.clone())
-      }
-      _ => param.clone(),
-    };
-    params.push(param);
-  }
-
-  params
+    params
 }
 
 /// Implements [`Display`](std::fmt::Display) as a wrapper around
@@ -86,8 +79,8 @@ fn deserialize_in_generics(
 /// #[serde(content = "val")]
 /// #[serde(rename_all = "lowercase")]
 /// enum EitherStringOrNum {
-///   String(String),
-///   Num(f64),
+///     String(String),
+///     Num(f64),
 /// }
 ///
 /// let num = EitherStringOrNum::Num(12.);
@@ -95,27 +88,27 @@ fn deserialize_in_generics(
 ///
 /// let string = EitherStringOrNum::String("hello".to_owned());
 /// assert_eq!(
-///   string.to_string(),
-///   r#"{"type":"string","val":"hello"}"#,
+///     string.to_string(),
+///     r#"{"type":"string","val":"hello"}"#,
 /// );
 /// ```
 ///
 #[proc_macro_derive(DisplayAsJson)]
 pub fn derive_display_as_json(input: TokenStream) -> TokenStream {
-  let input = parse_macro_input!(input as DeriveInput);
-  let name = &input.ident;
-  let generics = &input.generics;
-  let params = serialize_in_generics(generics);
+    let input = parse_macro_input!(input as DeriveInput);
+    let name = &input.ident;
+    let generics = &input.generics;
+    let params = serialize_in_generics(generics);
 
-  let result = derive_fmt_as_json!(
-    std::fmt::Display,
-    name,
-    generics,
-    params,
-    serde_json::to_string
-  );
+    let result = derive_fmt_as_json!(
+        std::fmt::Display,
+        name,
+        generics,
+        params,
+        serde_json::to_string
+    );
 
-  TokenStream::from(result)
+    TokenStream::from(result)
 }
 
 /// Implements [`Display`](std::fmt::Display) as a wrapper around
@@ -135,8 +128,8 @@ pub fn derive_display_as_json(input: TokenStream) -> TokenStream {
 /// #[serde(content = "val")]
 /// #[serde(rename_all = "lowercase")]
 /// enum EitherStringOrNum {
-///   String(String),
-///   Num(f64),
+///     String(String),
+///     Num(f64),
 /// }
 ///
 /// let res = r#"{
@@ -157,23 +150,21 @@ pub fn derive_display_as_json(input: TokenStream) -> TokenStream {
 /// ```
 ///
 #[proc_macro_derive(DisplayAsJsonPretty)]
-pub fn derive_display_as_json_pretty(
-  input: TokenStream,
-) -> TokenStream {
-  let input = parse_macro_input!(input as DeriveInput);
-  let name = &input.ident;
-  let generics = &input.generics;
-  let params = serialize_in_generics(generics);
+pub fn derive_display_as_json_pretty(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    let name = &input.ident;
+    let generics = &input.generics;
+    let params = serialize_in_generics(generics);
 
-  let result = derive_fmt_as_json!(
-    std::fmt::Display,
-    name,
-    generics,
-    params,
-    serde_json::to_string_pretty
-  );
+    let result = derive_fmt_as_json!(
+        std::fmt::Display,
+        name,
+        generics,
+        params,
+        serde_json::to_string_pretty
+    );
 
-  TokenStream::from(result)
+    TokenStream::from(result)
 }
 
 /// Implements [`Debug`](std::fmt::Debug) as a wrapper around
@@ -193,8 +184,8 @@ pub fn derive_display_as_json_pretty(
 /// #[serde(content = "val")]
 /// #[serde(rename_all = "lowercase")]
 /// enum EitherStringOrNum {
-///   String(String),
-///   Num(f64),
+///     String(String),
+///     Num(f64),
 /// }
 ///
 /// let num = EitherStringOrNum::Num(12.);
@@ -202,27 +193,27 @@ pub fn derive_display_as_json_pretty(
 ///
 /// let string = EitherStringOrNum::String("hello".to_owned());
 /// assert_eq!(
-///   format!("{:?}", string),
-///   r#"{"type":"string","val":"hello"}"#,
+///     format!("{:?}", string),
+///     r#"{"type":"string","val":"hello"}"#,
 /// );
 /// ```
 ///
 #[proc_macro_derive(DebugAsJson)]
 pub fn derive_debug_as_json(input: TokenStream) -> TokenStream {
-  let input = parse_macro_input!(input as DeriveInput);
-  let name = &input.ident;
-  let generics = &input.generics;
-  let params = serialize_in_generics(generics);
+    let input = parse_macro_input!(input as DeriveInput);
+    let name = &input.ident;
+    let generics = &input.generics;
+    let params = serialize_in_generics(generics);
 
-  let result = derive_fmt_as_json!(
-    std::fmt::Debug,
-    name,
-    generics,
-    params,
-    serde_json::to_string
-  );
+    let result = derive_fmt_as_json!(
+        std::fmt::Debug,
+        name,
+        generics,
+        params,
+        serde_json::to_string
+    );
 
-  TokenStream::from(result)
+    TokenStream::from(result)
 }
 
 /// Implements [`Debug`](std::fmt::Debug) as a wrapper around
@@ -242,8 +233,8 @@ pub fn derive_debug_as_json(input: TokenStream) -> TokenStream {
 /// #[serde(content = "val")]
 /// #[serde(rename_all = "lowercase")]
 /// enum EitherStringOrNum {
-///   String(String),
-///   Num(f64),
+///     String(String),
+///     Num(f64),
 /// }
 ///
 /// let res = r#"{
@@ -264,23 +255,21 @@ pub fn derive_debug_as_json(input: TokenStream) -> TokenStream {
 /// ```
 ///
 #[proc_macro_derive(DebugAsJsonPretty)]
-pub fn derive_debug_as_json_pretty(
-  input: TokenStream,
-) -> TokenStream {
-  let input = parse_macro_input!(input as DeriveInput);
-  let name = &input.ident;
-  let generics = &input.generics;
-  let params = serialize_in_generics(generics);
+pub fn derive_debug_as_json_pretty(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    let name = &input.ident;
+    let generics = &input.generics;
+    let params = serialize_in_generics(generics);
 
-  let result = derive_fmt_as_json!(
-    std::fmt::Debug,
-    name,
-    generics,
-    params,
-    serde_json::to_string_pretty
-  );
+    let result = derive_fmt_as_json!(
+        std::fmt::Debug,
+        name,
+        generics,
+        params,
+        serde_json::to_string_pretty
+    );
 
-  TokenStream::from(result)
+    TokenStream::from(result)
 }
 
 /// Implements [`FromStr`](std::str::FromStr) as a wrapper around
@@ -302,8 +291,8 @@ pub fn derive_debug_as_json_pretty(
 /// #[serde(content = "val")]
 /// #[serde(rename_all = "lowercase")]
 /// enum EitherStringOrNum {
-///   String(String),
-///   Num(f64),
+///     String(String),
+///     Num(f64),
 /// }
 ///
 /// let s = r#"{"type":"num","val":12.0}"#;
@@ -317,20 +306,20 @@ pub fn derive_debug_as_json_pretty(
 ///
 #[proc_macro_derive(FromStrAsJson)]
 pub fn derive_from_str_as_json(input: TokenStream) -> TokenStream {
-  let input = parse_macro_input!(input as DeriveInput);
-  let name = &input.ident;
-  let generics = &input.generics;
-  let params = deserialize_in_generics(generics);
+    let input = parse_macro_input!(input as DeriveInput);
+    let name = &input.ident;
+    let generics = &input.generics;
+    let params = deserialize_in_generics(generics);
 
-  let result = quote! {
-    impl<#params> std::str::FromStr for #name #generics {
-      type Err = serde_json::Error;
+    let result = quote! {
+        impl<#params> std::str::FromStr for #name #generics {
+            type Err = serde_json::Error;
 
-      fn from_str(s: &str) -> Result<Self, Self::Err> {
-        serde_json::from_str(s)
-      }
-    }
-  };
+            fn from_str(s: &str) -> Result<Self, Self::Err> {
+              serde_json::from_str(s)
+            }
+        }
+    };
 
-  TokenStream::from(result)
+    TokenStream::from(result)
 }
