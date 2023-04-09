@@ -65,19 +65,19 @@ use serde_json::{Result, to_string};
 
 #[derive(Serialize)]
 struct Foo {
-  bar: String,
-  baz: i32,
-  bat: bool,
+    bar: String,
+    baz: i32,
+    bat: bool,
 }
 
 fn main() -> Result<()> {
-  let f = Foo { bar: "bar".to_owned(), baz: 0, bat: true };
+    let f = Foo { bar: "bar".to_owned(), baz: 0, bat: true };
 
-  let s = to_string(&f)?;
+    let s = to_string(&f)?;
 
-  assert_eq!(s, r#"{"bar":"bar","baz":0,"bat":true}"#);
+    assert_eq!(s, r#"{"bar":"bar","baz":0,"bat":true}"#);
 
-  Ok(())
+    Ok(())
 } 
 ```
 
@@ -90,9 +90,9 @@ use display_json::DisplayAsJson;
 
 #[derive(Serialize, DisplayAsJson)]
 struct Foo {
-  bar: String,
-  baz: i32,
-  bat: bool,
+    bar: String,
+    baz: i32,
+    bat: bool,
 }
 
 let f = Foo { bar: "bar".to_owned(), baz: 0, bat: true };
@@ -114,9 +114,9 @@ use display_json::DisplayAsJson;
 
 #[derive(Serialize, DisplayAsJson)]
 struct Foo {
-  bar: String,
-  baz: i32,
-  bat: bool,
+    bar: String,
+    baz: i32,
+    bat: bool,
 }
 
 let f = Foo { bar: "bar".to_owned(), baz: 0, bat: true };
@@ -141,9 +141,9 @@ use display_json::DebugAsJson;
 
 #[derive(Serialize, DebugAsJson)]
 struct Foo {
-  bar: String,
-  baz: i32,
-  bat: bool,
+    bar: String,
+    baz: i32,
+    bat: bool,
 }
 
 let f = Foo { bar: "bar".to_owned(), baz: 0, bat: true };
@@ -167,9 +167,9 @@ use display_json::{DisplayAsJsonPretty, DebugAsJsonPretty};
 
 #[derive(Serialize, DisplayAsJsonPretty, DebugAsJsonPretty)]
 struct Foo {
-  bar: String,
-  baz: i32,
-  bat: bool,
+    bar: String,
+    baz: i32,
+    bat: bool,
 }
 
 let f = Foo { bar: "bar".to_owned(), baz: 0, bat: true };
@@ -242,9 +242,9 @@ use std::str::FromStr;
 
 #[derive(Deserialize, FromStrAsJson, PartialEq, Debug)]
 struct Foo {
-  bar: String,
-  baz: i32,
-  bat: bool,
+    bar: String,
+    baz: i32,
+    bat: bool,
 }
 
 let f_as_json = r#"{"bar":"bar","baz":0,"bat":true}"#;
