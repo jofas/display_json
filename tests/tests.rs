@@ -27,6 +27,16 @@ struct ExampleFromStr {
     field3: Option<String>,
 }
 
+#[derive(Serialize, Deserialize, DebugAsJson, FromStrAsJson, PartialEq, Default)]
+enum ExampleFromStrEnum {
+    #[default]
+    Foo,
+    Bar,
+}
+
+#[derive(Serialize, Deserialize, DebugAsJson, FromStrAsJson, PartialEq)]
+struct ExampleFromStrStringUnnamed(String);
+
 #[derive(Serialize, Deserialize, DebugAsJson, FromStrAsJson, PartialEq)]
 struct ExampleGenerics<T> {
     field1: T,
@@ -83,6 +93,26 @@ fn example_from_str() {
     assert_eq!(
         ExampleFromStr::from_str(JSON_PRETTY).unwrap(),
         ExampleFromStr::default()
+    );
+}
+
+#[test]
+fn example_from_str_newtype_string_unnamed() {
+    assert_eq!(
+        ExampleFromStrStringUnnamed::from_str("Foo").unwrap(),
+        ExampleFromStrStringUnnamed("Foo".into())
+    );
+}
+
+#[test]
+fn example_from_str_enum() {
+    assert_eq!(
+        ExampleFromStrEnum::from_str("Foo").unwrap(),
+        ExampleFromStrEnum::default()
+    );
+    assert_eq!(
+        ExampleFromStrEnum::from_str("Bar").unwrap(),
+        ExampleFromStrEnum::Bar
     );
 }
 

@@ -311,15 +311,64 @@ pub fn derive_from_str_as_json(input: TokenStream) -> TokenStream {
     let generics = &input.generics;
     let params = deserialize_in_generics(generics);
 
-    let result = quote! {
-        impl<#params> std::str::FromStr for #name #generics {
-            type Err = serde_json::Error;
+    let quote_string = match input.data {
+        syn::Data::Enum(enum_) => is_enum_with_simple_variants(&enum_),
+        syn::Data::Struct(syn::DataStruct {
+            fields: syn::Fields::Unnamed(fields),
+            ..
+        }) => {
+            if fields.unnamed.len() == 1 {
+                type_is_string(&fields.unnamed[0])
+            } else {
+                false
+            }
+        }
+        _ => false,
+    };
 
-            fn from_str(s: &str) -> Result<Self, Self::Err> {
-              serde_json::from_str(s)
+    let result = if quote_string {
+        quote! {
+            impl<#params> std::str::FromStr for #name #generics {
+                type Err = serde_json::Error;
+
+                fn from_str(s: &str) -> Result<Self, Self::Err> {
+                    let s = serde_json::to_string(s)?;
+
+                    serde_json::from_str(s.as_str())
+                }
+            }
+        }
+    } else {
+        quote! {
+            impl<#params> std::str::FromStr for #name #generics {
+                type Err = serde_json::Error;
+
+                fn from_str(s: &str) -> Result<Self, Self::Err> {
+                    serde_json::from_str(s)
+                }
             }
         }
     };
 
     TokenStream::from(result)
+}
+
+fn is_enum_with_simple_variants(item_enum: &syn::DataEnum) -> bool {
+    item_enum
+        .variants
+        .iter()
+        .all(|variant| match &variant.fields {
+            syn::Fields::Unit => true,
+            _ => false,
+        })
+}
+
+fn type_is_string(field: &syn::Field) -> bool {
+    let string: syn::Path = syn::parse_str("String").unwrap();
+    if let syn::Type::Path(syn::TypePath { path, .. }) = &field.ty {
+        if *path == string {
+            return true;
+        }
+    }
+    false
 }
