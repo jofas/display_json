@@ -17,7 +17,7 @@ documentation = "https://docs.rs/display_json"
 proc-macro = true
 
 [dependencies]
-syn = { version = "^1.0.0", features = ["derive", "printing", "extra-traits", "parsing"] }
+syn = { version = "2", features = ["derive", "printing", "extra-traits", "parsing"] }
 quote = "^1.0.0"
 proc-macro2 = "^1.0.24"
 serde_json = "^1.0.64"
