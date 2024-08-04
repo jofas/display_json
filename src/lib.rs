@@ -315,7 +315,7 @@ pub fn derive_from_str_as_json(input: TokenStream) -> TokenStream {
         impl<#params> std::str::FromStr for #name #generics {
             type Err = serde_json::Error;
 
-            fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+            fn from_str(s: &str) -> ::std::result::Result<Self, Self::Err> {
               serde_json::from_str(s)
             }
         }
