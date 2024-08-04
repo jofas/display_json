@@ -1,4 +1,4 @@
-# display_json
+# `display_json`
 
 [![Build Status](https://github.com/jofas/display_json/actions/workflows/build.yml/badge.svg)](https://github.com/jofas/display_json/actions/workflows/build.yml)
 [![Latest Version](https://img.shields.io/crates/v/display_json.svg)](https://crates.io/crates/display_json)
@@ -25,13 +25,6 @@ deserialization capabilities into the traits from `std`.
 ## Table of Contents
 
 <!--ts-->
-   * [Serializing objects to json with rust std's fmt traits](#serializing-objects-to-json-with-rust-stds-fmt-traits)
-      * [DisplayAsJson](#displayasjson)
-      * [DebugAsJson](#debugasjson)
-      * [Pretty json](#pretty-json)
-      * [Mixing Display and Debug](#mixing-display-and-debug)
-   * [Deserializing objects from json with rust std's FromStr trait](#deserializing-objects-from-json-with-rust-stds-fromstr-trait)
-      * [FromStrAsJson](#fromstrasjson)
 <!--te-->
 
 
@@ -53,7 +46,7 @@ the `to_string` and `to_string_pretty` functions from the
 implementation of `Display` or `Debug` for your type.
 
 
-### DisplayAsJson
+### `DisplayAsJson`
 
 Without `display_json`, you'd have to serialize your object to a json
 string like this:
@@ -129,7 +122,7 @@ println!("{}", f);
 ```
 
 
-### DebugAsJson
+### `DebugAsJson`
 
 `DebugAsJson` works the same as `DisplayAsJson`, only instead of 
 implementing the `Display` trait, it implements the `Debug` trait:
@@ -198,7 +191,7 @@ for the body of an http request and `DebugAsJsonPretty` for creating
 well-readable debugging messages for you to debug your code.
 
 
-## Deserializing objects from json with rust std's FromStr trait
+## Deserializing objects from json with rust std's `FromStr` trait
 
 While deserialization of json strings is usually done by integrating 
 your program directly with the [serde](https://serde.rs) and 
@@ -219,7 +212,7 @@ custom format with a parser just to cumbersomely write an
 implementation for `FromStr` by hand, `display_json` is a great 
 choice. 
 
-### FromStrAsJson
+### `FromStrAsJson`
 
 `display_json` exposes the `FromStrAsJson` custom derive procedural 
 macro you can derive on your type.

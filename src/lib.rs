@@ -25,7 +25,7 @@ macro_rules! derive_fmt_as_json {
 fn serialize_in_generics(g: &Generics) -> Punctuated<GenericParam, Comma> {
     let mut params = Punctuated::<GenericParam, Comma>::new();
 
-    for param in g.params.iter() {
+    for param in &g.params {
         let param = match param {
             GenericParam::Type(typ) => {
                 let mut typ = typ.clone();
@@ -45,7 +45,7 @@ fn serialize_in_generics(g: &Generics) -> Punctuated<GenericParam, Comma> {
 fn deserialize_in_generics(g: &Generics) -> Punctuated<GenericParam, Comma> {
     let mut params = Punctuated::<GenericParam, Comma>::new();
 
-    for param in g.params.iter() {
+    for param in &g.params {
         let param = match param {
             GenericParam::Type(typ) => {
                 let mut typ = typ.clone();
