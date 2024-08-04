@@ -26,12 +26,12 @@ deserialization capabilities into the traits from `std`.
 
 <!--ts-->
    * [Serializing objects to json with rust std's fmt traits](#serializing-objects-to-json-with-rust-stds-fmt-traits)
-      * [DisplayAsJson](#displayasjson)
-      * [DebugAsJson](#debugasjson)
+      * [`DisplayAsJson`](#displayasjson)
+      * [`DebugAsJson`](#debugasjson)
       * [Pretty json](#pretty-json)
       * [Mixing Display and Debug](#mixing-display-and-debug)
-   * [Deserializing objects from json with rust std's FromStr trait](#deserializing-objects-from-json-with-rust-stds-fromstr-trait)
-      * [FromStrAsJson](#fromstrasjson)
+   * [Deserializing objects from json with rust std's `FromStr` trait](#deserializing-objects-from-json-with-rust-stds-fromstr-trait)
+      * [`FromStrAsJson`](#fromstrasjson)
 <!--te-->
 
 
